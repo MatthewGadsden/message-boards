@@ -18,6 +18,7 @@ public class ConsoleProgram
         {
             User = user,
             Message = message,
+            PostedTime = DateTime.UtcNow,
         };
 
         project.PostMessage(newPost);
@@ -32,8 +33,9 @@ public class ConsoleProgram
         var stringBuilder = new StringBuilder();
         foreach (var post in posts)
         {
+            var timeDifference = DateTime.UtcNow - post.PostedTime;
             stringBuilder.AppendLine($"{post.User.Name}");
-            stringBuilder.AppendLine($"{post.Message}");
+            stringBuilder.AppendLine($"{post.Message} ({timeDifference.TotalMinutes} minutes ago)");
         }
         
         return stringBuilder.ToString();

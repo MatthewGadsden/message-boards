@@ -40,6 +40,13 @@ public class ConsoleProgram
         
         return stringBuilder.ToString();
     }
+    
+    private void Follow(string username, string projectName)
+    {
+        var project = _memory.GetProject(projectName);
+        var user = _memory.GetUser(username);
+        user!.FollowProject(project!);
+    }
 
     public void Run()
     {
@@ -62,6 +69,7 @@ public class ConsoleProgram
                     break;
                 // following case
                 case { Count: 3 }:
+                    Follow(arguments[0], arguments[2]);
                     break;
                 // wall case
                 case { Count: 2 }:

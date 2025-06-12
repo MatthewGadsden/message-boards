@@ -4,10 +4,16 @@ public class Memory
 {
     private HashSet<User> Users { get; set; } = new HashSet<User>();
     private HashSet<Project> Projects { get; set; } = new HashSet<Project>();
+    private HashSet<Post> Posts { get; set; } = new HashSet<Post>();
+
+    public User? GetUser(string username)
+    {
+        return Users.SingleOrDefault(z => z.Name == username);
+    }
 
     public User GetOrCreateUser(string username)
     {
-        var user = Users.SingleOrDefault(z => z.Name == username);
+        var user = GetUser(username);
         if (user != null) return user;
 
         var newUser = new User()

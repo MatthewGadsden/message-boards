@@ -6,5 +6,5 @@ public class User
     public required string Name { get; set; }
     
     // users that this user follows ids
-    private HashSet<int> FollowingUserIds { get; set; } = [];
+    private HashSet<int> FollowingProjectIds { get; set; } = [];
 }

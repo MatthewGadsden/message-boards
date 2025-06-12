@@ -12,4 +12,6 @@ public class Project
     {
         Posts.Add(newPost);
     }
+
+    public List<Post> GetPosts() => Posts;
 }

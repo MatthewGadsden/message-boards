@@ -19,10 +19,15 @@ public class Memory
         Users.Add(newUser);
         return newUser;
     }
+
+    public Project? GetProject(string projectName)
+    {
+        return Projects.SingleOrDefault(z => z.Name == projectName);
+    }
     
     public Project GetOrCreateProject(string projectName)
     {
-        var project = Projects.SingleOrDefault(z => z.Name == projectName);
+        var project = GetProject(projectName);
         if (project != null) return project;
 
         var newProject = new Project()

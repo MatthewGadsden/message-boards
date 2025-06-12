@@ -1,3 +1,4 @@
+using System.Text;
 using message_boards.Models;
 
 namespace message_boards;
@@ -21,6 +22,22 @@ public class ConsoleProgram
 
         project.PostMessage(newPost);
     }
+    
+    private string GetProjectWall(string projectName)
+    {
+        var project = _memory.GetProject(projectName);
+        if (project == null) throw new Exception("project not found");
+        var posts = project.GetPosts();
+
+        var stringBuilder = new StringBuilder();
+        foreach (var post in posts)
+        {
+            stringBuilder.AppendLine($"{post.User.Name}");
+            stringBuilder.AppendLine($"{post.Message}");
+        }
+        
+        return stringBuilder.ToString();
+    }
 
     public void Run()
     {
@@ -38,6 +55,8 @@ public class ConsoleProgram
                     break;
                 // reading case
                 case { Count: 1 }:
+                    var wallOutput = GetProjectWall(arguments[0]);
+                    Console.WriteLine(wallOutput);
                     break;
                 // following case
                 case { Count: 3 }:
@@ -49,8 +68,6 @@ public class ConsoleProgram
                     Console.WriteLine("Bad commands entered...");
                     break;
             }
-    
-            Console.WriteLine("continue...");
         }
         
         Console.WriteLine("quitting...");

@@ -34,9 +34,7 @@ public class ConsoleProgram
         var stringBuilder = new StringBuilder();
         foreach (var post in posts)
         {
-            var timeDifference = DateTime.UtcNow - post.PostedTime;
-            stringBuilder.AppendLine($"{post.User.Name}");
-            stringBuilder.AppendLine($"{post.Message} ({Math.Round(timeDifference.TotalMinutes)} minutes ago)");
+            stringBuilder.AppendLine(post.GetProjectWallDisplay());
         }
         
         return stringBuilder.ToString();

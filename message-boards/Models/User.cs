@@ -6,12 +6,12 @@ public class User
     public required string Name { get; set; }
     
     // users that this user follows ids
-    private HashSet<Project> FollowingProjectIds { get; set; } = [];
+    private HashSet<Project> FollowingProjects { get; set; } = [];
 
     public void FollowProject(Project project)
     {
-        FollowingProjectIds.Add(project);
+        FollowingProjects.Add(project);
     }
 
-    public Project[] GetFollowingProjects() => FollowingProjectIds.ToArray();
+    public Project[] GetFollowingProjects() => FollowingProjects.ToArray();
 }

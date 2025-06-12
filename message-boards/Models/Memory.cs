@@ -45,4 +45,15 @@ public class Memory
         Projects.Add(newProject);
         return newProject;
     }
+
+    public void PostMessage(Post newPost)
+    {
+        Posts.Add(newPost);
+    }
+    
+    public Post[] GetPostsByProjectId(int projectId) => GetPostsByProjectIds([projectId]);
+    public Post[] GetPostsByProjectIds(IEnumerable<int> projectIds)
+    {
+        return Posts.Where(z => projectIds.Contains(z.ProjectId)).ToArray();
+    }
 }

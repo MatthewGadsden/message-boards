@@ -19,23 +19,39 @@ public class ConsoleProgram
             User = user,
             Message = message,
             PostedTime = DateTime.UtcNow,
+            ProjectId = project.Id
         };
 
-        project.PostMessage(newPost);
+        _memory.PostMessage(newPost);
     }
     
     private string GetProjectWall(string projectName)
     {
-        var project = _memory.GetProject(projectName);
-        if (project == null) throw new Exception("project not found");
-        var posts = project.GetPosts();
+        var project = _memory.GetOrCreateProject(projectName);
+        var posts = _memory.GetPostsByProjectId(project.Id).OrderBy(z => z.PostedTime);
 
         var stringBuilder = new StringBuilder();
         foreach (var post in posts)
         {
             var timeDifference = DateTime.UtcNow - post.PostedTime;
             stringBuilder.AppendLine($"{post.User.Name}");
-            stringBuilder.AppendLine($"{post.Message} ({timeDifference.TotalMinutes} minutes ago)");
+            stringBuilder.AppendLine($"{post.Message} ({Math.Round(timeDifference.TotalMinutes)} minutes ago)");
+        }
+        
+        return stringBuilder.ToString();
+    }
+    
+    private string GetUserWall(string username)
+    {
+        var user = _memory.GetOrCreateUser(username);
+        var projects = user!.GetFollowingProjects();
+        var projectDictionary = projects.ToDictionary(z => z.Id, z => z);
+        var posts = _memory.GetPostsByProjectIds(projects.Select(z => z.Id));
+        
+        var stringBuilder = new StringBuilder();
+        foreach (var post in posts)
+        {
+            stringBuilder.AppendLine(post.GetUserWallDisplay(projectDictionary[post.ProjectId]));
         }
         
         return stringBuilder.ToString();
@@ -43,9 +59,9 @@ public class ConsoleProgram
     
     private void Follow(string username, string projectName)
     {
-        var project = _memory.GetProject(projectName);
-        var user = _memory.GetUser(username);
-        user!.FollowProject(project!);
+        var project = _memory.GetOrCreateProject(projectName);
+        var user = _memory.GetOrCreateUser(username);
+        user.FollowProject(project!);
     }
 
     public void Run()
@@ -73,6 +89,7 @@ public class ConsoleProgram
                     break;
                 // wall case
                 case { Count: 2 }:
+                    Console.WriteLine(GetUserWall(arguments[0]));
                     break;
                 default:
                     Console.WriteLine("Bad commands entered...");
